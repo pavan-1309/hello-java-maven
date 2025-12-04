@@ -28,6 +28,22 @@ pipeline{
                 sh 'mvn package'
             }
         }
+        stage('build docker image'){
+            steps{
+                script{
+                    dockerImage = docker.build("pavan1309/hello-java-maven:${env.BUILD_ID}")
+                }
+            }
+        }
+        stage('push docker image'){
+            steps{
+                script{
+                    docker.withRegistry('', 'docker') {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
     }
 
 
