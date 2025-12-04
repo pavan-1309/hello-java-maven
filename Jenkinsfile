@@ -3,7 +3,6 @@ pipeline{
     tools {
       jdk 'jdk'
       maven 'mvn'
-      dockerTool 'docker'
     }
     stages{
         stage('clean workspace'){
@@ -32,14 +31,8 @@ pipeline{
         stage('build docker image'){
             steps{
                 script{
-                    dockerImage = docker.build("pavan1309/hello-java-maven:${env.BUILD_ID}")
-                }
-            }
-        }
-        stage('push docker image'){
-            steps{
-                script{
-                    docker.withRegistry('', 'dockerhub-credentials') {
+                    def dockerImage = docker.build("pavan1309/hello-java-maven:${env.BUILD_ID}")
+                    docker.withRegistry('', 'docker') {
                         dockerImage.push()
                     }
                 }
