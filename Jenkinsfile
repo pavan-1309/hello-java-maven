@@ -23,6 +23,20 @@ pipeline{
             }
         }
 
+        stages {
+        stage ('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                dependencyCheck additionalArguments: ''' 
+                    -o "./" 
+                    -s "./"
+                    -f "ALL" 
+                    --prettyPrint''', odcInstallation: 'dp'
+
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+            }
+        }     
+    }
+
         stage('package'){
             steps{
                 sh 'mvn package'
